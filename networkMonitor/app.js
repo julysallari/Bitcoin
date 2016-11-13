@@ -49,19 +49,42 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 var nodes;
+var dataNodes;
 db.findOne({collection:"nodes"}, function (err, data) {
 	if (err) {console.log("Find Error " + err);return;}
-
 	if (data) {
-		nodes = data;
+		dataNodes = data;
+		nodes = _updateNodes();
 	} else {
 		db.insert({collection:"nodes", nodes: {}}, function (err, data) {
 			if (err) {console.log("Insert Error " + err);return;}
-			nodes = data;
+			dataNodes = data;
+			nodes = _updateNodes();
 		});
 	}
 });
 
 function persistNodes() {
-	db.update({_id: nodes._id},{ $set: {nodes: nodes.nodes}}, function () {});
+	dataNodes = _updateDataNodes();
+	db.update({_id: dataNodes._id},{ $set: {nodes: dataNodes.nodes}}, function () {});
+}
+
+function _updateDataNodes() {
+	var dataNodes = {_id: nodes._id, collection:"nodes", nodes: {}};
+	for (var k in nodes.nodes) {
+		dataNodes.nodes[replaceAll(k,'.','_')] = nodes.nodes[k];
+	}
+	return dataNodes;
+}
+
+function _updateNodes() {
+	var nodes = {_id: dataNodes._id, collection:"nodes", nodes: {}};
+	for (var k in dataNodes.nodes) {
+		nodes.nodes[replaceAll(k,'_','.')] = nodes.nodes[k];
+	}
+	return nodes;
+}
+
+function replaceAll(s1, s2, s3) {
+	return s1.split(s2).join(s3);
 }

@@ -39,28 +39,21 @@ html
 				section.sidebar
 					ul.sidebar-menu
 						li.header MAIN NAVIGATION
-						li.treeview
-							a(href='#')
-								i.fa.fa-dashboard
-								span Dashboard
-								span.pull-right-container
-									i.fa.fa-angle-left.pull-right
-							ul.treeview-menu
-								li
-									a(href='../../index.html')
-										i.fa.fa-circle-o
-										|	Dashboard v1
-								li
-									a(href='../../index2.html')
-										i.fa.fa-circle-o
-										|	Dashboard v2
+						li
+							a(href='/')
+								i.fa.fa-home
+								span Index
+						li
+							a(href='/api/v1/nodes',target="_blank")
+								i.fa.fa-book
+								span Nodes Api
 			// ===============================================
 			// Content Wrapper. Contains page content
 			.content-wrapper
 				// Content Header (Page header)
 				section.content-header
 					h1
-						| Nodos
+						| Nodes
 				// Main content
 				section.content
 					.box.box-success

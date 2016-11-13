@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/v1/nodes', function(req, res, next) {
+	res.setHeader('Content-Type', 'application/json');
 	if (req.app.get('nodes')) {
 		res.send(JSON.stringify(req.app.get('nodes').nodes));
 	} else {

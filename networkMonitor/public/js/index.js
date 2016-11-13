@@ -6,7 +6,7 @@ function updateNodes() {
 		method: 'GET',
 		url: 'api/v1/nodes',
 		success: function (nodesData) {
-			initializeGraphs(JSON.parse(nodesData));
+			initializeGraphs(nodesData);
 		}
 	});
 }

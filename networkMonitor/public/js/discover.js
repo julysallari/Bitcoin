@@ -3,7 +3,6 @@ var Peer = require('bitcore-p2p').Peer;
 var Networks = require('bitcore-lib').Networks;
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-NODE_TLS_REJECT_UNAUTHORIZED=0
 var Pool = p2p.Pool;
 var Messages = p2p.Messages;
 

@@ -6,8 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var Datastore = require('nedb')
 var db = new Datastore({ filename: 'database/database', autoload: true });
-db.ensureIndex({ fieldName: 'collection', unique: true }, function (err) {
-});
+db.ensureIndex({ fieldName: 'collection', unique: true }, function (err) {});
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -48,3 +47,21 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+var nodes;
+db.findOne({collection:"nodes"}, function (err, data) {
+	if (err) {console.log("Find Error " + err);return;}
+
+	if (data) {
+		nodes = data;
+	} else {
+		db.insert({collection:"nodes", nodes: {}}, function (err, data) {
+			if (err) {console.log("Insert Error " + err);return;}
+			nodes = data;
+		});
+	}
+});
+
+function persistNodes() {
+	db.update({_id: nodes._id},{ $set: {nodes: nodes.nodes}}, function () {});
+}

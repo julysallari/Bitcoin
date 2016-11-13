@@ -4,6 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var Datastore = require('nedb')
+var db = new Datastore({ filename: 'database/database', autoload: true });
+db.ensureIndex({ fieldName: 'collection', unique: true }, function (err) {
+});
 
 var index = require('./routes/index');
 var users = require('./routes/users');

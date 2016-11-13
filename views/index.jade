@@ -1,0 +1,20 @@
+extends main.jade
+block content
+	section.content
+		.box.box-success
+			.box-header.with-border
+				h3.box-title Scanned Nodes
+			.box-body
+				.row
+					.col-xs-12
+						#nodes
+						#maxVersionCount
+					.col-md-4.col-sm-6.col-xs-12
+						canvas#nodesPieChart(width="400", height="400")
+					.col-md-4.col-sm-6.col-xs-12
+						canvas#nodesBarChart(width="400", height="400")
+block scripts
+	script.
+		var bitnodes = false;
+block title
+	|Index

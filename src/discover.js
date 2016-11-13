@@ -1,12 +1,10 @@
 var UPDATE_FREQUENCY_MINUTES = 20;
-var app;
-module.exports = function(appvar){
-	app = appvar;
-}
+
 //Database initiailzation
 var Datastore = require('nedb')
 var db = new Datastore({ filename: 'database/database', autoload: true });
 db.ensureIndex({ fieldName: 'collection', unique: true }, function (err) {});
+db.persistence.setAutocompactionInterval(1000*60);
 
 //Bitcore initialization
 var p2p = require('bitcore-p2p');
@@ -76,6 +74,9 @@ function tryDisconnectPeer(ip) {
 	if (peers[ip] && peers[ip]['ready'] && peers[ip]['addr'] && peers[ip]['peer'].status != Peer.STATUS.DISCONNECTED) {
 		peers[ip].peer.disconnect();
 	}
+	if (peers[ip] && peers[ip]['peer'].status == Peer.STATUS.DISCONNECTED) {
+		delete peers[ip];
+	}
 }
 
 //Data methods
@@ -93,7 +94,6 @@ function shouldUpdateNode(ip) {
 }
 
 function persistNodes() {
-	app.set('nodes',nodes);
 	dataNodes = _updateDataNodes();
 	db.update({_id: dataNodes._id}, dataNodes, function () {});
 }

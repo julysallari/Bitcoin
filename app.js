@@ -45,6 +45,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var discover = require('./src/discover')(app);
+//var discover = require('./src/discover')(app);
+
+var Datastore = require('nedb')
+var db = new Datastore({ filename: 'database/database', autoload: true });
+app.set('db', db);
 module.exports = app;
 

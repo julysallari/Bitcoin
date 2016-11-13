@@ -2,28 +2,56 @@ var colors = ["#ECF0F1", "#3FC380", "#EB9532", "#F89406", "#36D7B7", "#DADFE1", 
 updateNodes();
 
 function updateNodes() {
-	$.ajax({
-		method: 'GET',
-		url: 'api/v1/nodes',
-		success: function (nodesData) {
-			initializeGraphs(nodesData);
-		}
-	});
+	if (!bitnodes) {
+		$.ajax({
+			method: 'GET',
+			url: 'api/v1/nodes',
+			success: function (nodesData) {
+				initializeGraphs(nodesData);
+			}
+		});
+	} else {
+		$.ajax({
+			method: 'GET',
+			url: 'https://bitnodes.21.co/api/v1/snapshots/',
+			success: function (snapshots) {
+				var url = 'https://bitnodes.21.co/api/v1/snapshots/' + snapshots['results'][0]['timestamp'] + '/';
+				$.ajax({
+					method: 'GET',
+					url: url,
+					success: function (nodesData) {
+						initializeGraphs(nodesData);
+					}
+				});
+			}
+		});
+	}
 }
 
 function initializeGraphs(nodesData) {
+	console.log(nodesData)
 	var maxVersionCount = {v:0,count:0};
 	var nodes = 0;
 	var versions = {};
-	for (var k in nodesData) {
-		var version = nodesData[k]['version'];
-		if (versions[version]) {
-			versions[version] = versions[version] + 1;
-		} else {
-			versions[version] = 1;
+	if (bitnodes) {
+		for (var k in nodesData.nodes) {
+			var version = nodesData.nodes[k][0];
+			if (versions[version]) {
+				versions[version] = versions[version] + 1;
+			} else {
+				versions[version] = 1;
+			}
+		}
+	} else {
+		for (var k in nodesData) {
+			var version = nodesData[k]['version'];
+			if (versions[version]) {
+				versions[version] = versions[version] + 1;
+			} else {
+				versions[version] = 1;
+			}
 		}
 	}
-	console.log(versions)
 	var labels = [];
 	var dataValues = [];
 	for (var v in versions) {
@@ -40,6 +68,7 @@ function initializeGraphs(nodesData) {
 	var data= {
 		labels: labels,
 		datasets: [{
+			label: 'Nodes',
 			data: dataValues,
 			backgroundColor: colors
 		}]
@@ -63,3 +92,10 @@ function shuffle(a) {
         a[j] = x;
     }
 }
+
+function validateIPaddress(ip) {
+	if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)) {  
+		return true
+	}  
+	return (false)  
+}  

@@ -1,3 +1,5 @@
+var UPDATE_FREQUENCY_MINUTES = 20;
+
 //Database initiailzation
 var Datastore = require('nedb')
 var db = new Datastore({ filename: 'database/database', autoload: true });
@@ -38,9 +40,11 @@ function getInfoFromIp(ip) {
 
 function getInfoFromPeer(peer) {
 	peer.on('ready', function(){
-		console.log("Adding peer " + peer.host);
-		nodes.nodes[peer.host] = {version: peer.version, updated: new Date()};
-		persistNodes();
+		if (!nodes.nodes[peer.host] || shouldUpdateNode(peer.host)) {
+			console.log("Adding peer " + peer.host);
+			nodes.nodes[peer.host] = {version: peer.version, updated: new Date()};
+			persistNodes();
+		}
 		//console.log("UPDATING NODES\n---------------------------------\n" + JSON.stringify(nodes));
 	});
 	peer.on('addr', function(info){
@@ -71,7 +75,7 @@ function getInfoFromPeer(peer) {
 //Data methods
 function shouldUpdateNode(ip) {
 	var timeDiff = Math.abs(new Date().getTime() - nodes.nodes[ip].updated.getTime());
-	return ((timeDiff / 1000) / 60 > 10);
+	return ((timeDiff / 1000) / 60 > UPDATE_FREQUENCY_MINUTES);
 }
 
 function persistNodes() {

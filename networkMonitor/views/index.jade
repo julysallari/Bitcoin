@@ -17,7 +17,7 @@ html
 		.wrapper
 			header.main-header
 				// Logo
-				a.logo(href='index.html')
+				a.logo(href='/')
 					// mini logo for sidebar mini 50x50 pixels
 					span.logo-mini
 						b NT
@@ -65,9 +65,16 @@ html
 				section.content
 					.box.box-success
 						.box-header.with-border
-							h3.box-title Title
+							h3.box-title Scanned Nodes
 						.box-body
-							| Start creating your amazing application!
+							.row
+								.col-xs-12
+									#nodes
+									#maxVersionCount
+								.col-md-4.col-sm-6.col-xs-12
+									canvas#nodesPieChart(width="400", height="400")
+								.col-md-4.col-sm-6.col-xs-12
+									canvas#nodesBarChart(width="400", height="400")
 			footer.main-footer
 				.pull-right.hidden-xs
 					a(href='https://github.com/julysallari/Bitcoin')
@@ -77,4 +84,6 @@ html
 		// ./wrapper
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js')
 		script(src='js/app.min.js')
+		script(src='js/index.js')

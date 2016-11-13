@@ -9,6 +9,7 @@
     "bitcore-lib": "^0.13.19",
     "bitcore-p2p": "^1.1.0",
     "body-parser": "~1.15.2",
+    "chart.js": "^2.4.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.14.0",

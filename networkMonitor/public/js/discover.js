@@ -17,6 +17,7 @@ var Messages = p2p.Messages;
 //Model structures
 var nodes = {};
 var dataNodes = {};
+var peers = {};
 
 //On connection closed exception catch
 process.on('uncaughtException', function(err) {
@@ -32,10 +33,18 @@ function discover() {
 	});
 }
 
+function updateCurrentHosts() {
+	for(var k in nodes.nodes) {
+		getInfoFromIp(k);
+	}
+}
+
 function getInfoFromIp(ip) {
-	console.log("GetInfoFromIp " + ip);
-	var peer = new Peer({host: ip});
-	getInfoFromPeer(peer);
+	if (!peers[ip] || peers[ip].status == Peer.STATUS.DISCONNECTED) {
+		var peer = new Peer({host: ip});
+		peers[ip] = peer;
+		getInfoFromPeer(peer);
+	}
 }
 
 function getInfoFromPeer(peer) {
@@ -67,9 +76,9 @@ function getInfoFromPeer(peer) {
 		// });
 		// console.log("info:"+info.addresses.count);
 	});
+	peer.connect();
 	var msg = new Messages;
 	peer.sendMessage(msg.GetAddr());
-	peer.connect();
 }
 
 //Data methods
@@ -110,6 +119,7 @@ db.findOne({collection:"nodes"}, function (err, data) {
 		dataNodes = data;
 		nodes = _updateNodes();
 		console.log("Loading nodes " + JSON.stringify(nodes));
+		updateCurrentHosts();
 	} else {
 		db.insert({collection:"nodes", nodes: {}}, function (err, data) {
 			if (err) {console.log("Insert Error " + err);return;}

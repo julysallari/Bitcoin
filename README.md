@@ -11,4 +11,4 @@ To run node viewer server run:
     npm install
     npm start
 
-This whill start a http server on port 3000.
+This will start a http server on port 3000.
